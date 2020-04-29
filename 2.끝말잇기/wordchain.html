@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  </head>
+  <body>
+
+    <div id="root">
+      <word-chain start-word='마스크'></word-chain>
+      <word-chain start-word='초밥'></word-chain>
+      <word-chain start-word='회식'></word-chain>
+    </div>
+
+    <script>
+      // 전역 컴포넌트
+      Vue.component('word-chain', { 
+        template: `
+          <div>
+            <div>{{word}}</div>
+            <form v-on:submit="onSubmitForm">
+              <input type="text" ref="answer" v-model="value">
+              <button type="submit">입력</button>
+              </form>
+            <div id="result">{{result}}</div>    
+          </div>
+        `,
+        props: ['startWord'],
+        data() { // 객체 형식이 아닌 함수로 만들어야한다
+          return {
+            word: this.startWord,
+            value: '',
+            result: ''
+          }
+        },
+        methods: {
+          onSubmitForm(e) {
+            e.preventDefault();
+            const lastWord = this.word.substr(this.word.length-1, 1);
+            const firstWord = this.value.substr(0, 1);
+            if(lastWord === firstWord) {
+              this.word = this.value;
+              this.result = '정답';
+            } else {
+              this.result = '땡';
+            }
+            this.value = '';
+            this.$refs.answer.focus();
+          }
+        }
+      });
+    </script>
+    <script>
+      const app = new Vue({
+        el: '#root'
+      });
+
+      // const app = new Vue({ // 뷰 인스턴스 new Vue
+      //   el: '#root',
+      //   data: {
+      //     word: '바보',
+      //     value: '',
+      //     result: ''
+      //   },
+      //   methods: {
+      //     onSubmitForm(e) {
+      //       e.preventDefault();
+      //       const lastWord = this.word.substr(this.word.length-1, 1);
+      //       const firstWord = this.value.substr(0, 1);
+      //       if(lastWord === firstWord) {
+      //         this.word = this.value;
+      //         this.result = '정답';
+      //       } else {
+      //         this.result = '땡';
+      //       }
+      //       this.value = '';
+      //       // this.$refs.answer.focus();
+      //     }
+      //   }
+      // });
+    </script>
+  </body>
+</html>
